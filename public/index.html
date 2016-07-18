@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>M3 Chocolate</title>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"
+            integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(init);
+        var presentationUrl = "https://docs.google.com/presentation/d/1jEg3kWTC9TVLKzMigSLYsDxe-C9PPUtEN5c1UMfP9nQ/embed?start=true&loop=true&delayms=7000";
+        var jenkinsStatusUrl = "http://mydtbld0079.hpeswlab.net:8080/view/MonitorView/";
+
+        function init() {
+            // init presentation
+            var preIframe = $('<iframe scrolling="no"></iframe>').attr('src', presentationUrl);
+            $('#m3presentationFrame').append(preIframe);
+
+            // init jenkins status
+            var jenkinsIframe = $('<iframe scrolling="no"></iframe>').attr('src', jenkinsStatusUrl);
+            $('#jenkinsBuildFrame').append(jenkinsIframe);
+
+            getStockData();
+            loadMessages();
+        }
+
+        function loadMessages() {
+
+            $.get('/api/messages').then(function(data){
+                var me = data.split(',');
+                me.forEach(function(m){
+                    addMessage(m);
+                });
+            });
+        }
+
+        function getStockData() {
+            $.ajax({
+                url: "http://dev.markitondemand.com/MODApis/Api/v2/Quote/jsonp?symbol=HPE",
+                dataType: "jsonp",
+                jsonpCallback: "updateStockData"
+            });
+            setTimeout(getStockData, 5 * 60 * 1000);
+        }
+
+        var messages = {};
+        function renderMessages(){
+            var HTML = '';
+            var i = 0;
+            Object.keys(messages).forEach(function(key){
+                var m = messages[key];
+                if(i > 0) {
+                    HTML += '&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;';
+                }
+                HTML += ' ' + m;
+                i++;
+            });
+            $('#messages').html(HTML);
+        }
+
+        function addMessage(message, key) {
+            key = key !== undefined ? key : Object.keys(messages).length;
+            messages[key] = message;
+            renderMessages();
+        }
+
+        function updateStockData(data) {
+            var change = Math.round(data.Change * 100) / 100;
+            var status;
+            if(change < 0) {
+                status = 'red';
+            } else {
+                status = 'green';
+            }
+
+            if(change > 0) {
+                change = '+' + change;
+            }
+
+            var stockHTML = '<span class="name">' + data.Name + ' (' + data.Symbol + ')</span>';
+            stockHTML += '<span class="value ' + status + '">$' + data.LastPrice + '</span>';
+            stockHTML += '<span class="' + status + '"> (' + change + '%)</span>';
+            if(messages.stock) {
+                delete message.stock;
+            }
+            addMessage(stockHTML, 'stock');
+        }
+
+    </script>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        div {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        iframe {
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            overflow: hidden;
+            -webkit-box-shadow: 3px 3px 3px 1px #D9D9D9;
+            box-shadow: 3px 3px 3px 1px #D9D9D9;
+        }
+
+        .frameWrapper {
+            padding:5px;
+        }
+
+        #m3presentationFrame {
+            width: 75%;
+            height: calc(100% - 20px);
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+
+        #jenkinsBuildFrame {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 25%;
+            height: calc(100% - 20px);
+        }
+
+        #bottomFrame {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            z-index: 10;
+            background-color: #fff;
+            font-family: Arial;
+            font-size: 20px;
+
+        }
+
+        #bottomFrame span {
+            margin-right: 10px;
+        }
+
+        #messages {
+            display: block;
+            padding:3px 10px;
+            height:40px;
+            line-height: 34px;
+            box-sizing: border-box;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+
+        .green {
+            color: green;
+        }
+
+        .red {
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+<div class="frameWrapper" id="jenkinsBuildFrame"></div>
+<div class="frameWrapper" id="m3presentationFrame"></div>
+<div id="bottomFrame">
+    <marquee behavior="scroll" direction="left" id="messages"></marquee>
+</div>
+</body>
+</html>
