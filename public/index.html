@@ -8,7 +8,7 @@
     <script>
         $(document).ready(init);
         var presentationUrl = "https://docs.google.com/presentation/d/1jEg3kWTC9TVLKzMigSLYsDxe-C9PPUtEN5c1UMfP9nQ/embed?start=true&loop=true&delayms=7000";
-        var jenkinsStatusUrl = "http://mydtbld0079.hpeswlab.net:8080/view/MonitorView/";
+        var jenkinsStatusUrl = "http://mydtbld0079.hpeswlab.net:8080/view/SRL%20Build%20Status%20Monitor/";
 
         function init() {
             // init presentation
@@ -43,10 +43,12 @@
         function loadMessages() {
 
             $.get('/api/messages').then(function(data){
-                var me = data.split(',');
-                me.forEach(function(m){
-                    addMessage(m);
-                });
+                if(data) {
+                    var me = data.split(',');
+                    me.forEach(function (m) {
+                        addMessage(m);
+                    });
+                }
             });
         }
 
@@ -56,7 +58,7 @@
                 dataType: "jsonp",
                 jsonpCallback: "updateStockData"
             });
-            setTimeout(getStockData, 5 * 60 * 1000);
+            setTimeout(getStockData, 3 * 1000);
         }
 
         var messages = {};
@@ -97,7 +99,7 @@
             stockHTML += '<span class="value ' + status + '">$' + data.LastPrice + '</span>';
             stockHTML += '<span class="' + status + '"> (' + change + '%)</span>';
             if(messages.stock) {
-                delete message.stock;
+                delete messages.stock;
             }
             addMessage(stockHTML, 'stock');
         }
