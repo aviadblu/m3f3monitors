@@ -19,15 +19,21 @@
             var jenkinsIframe = $('<iframe scrolling="no"></iframe>').attr('src', jenkinsStatusUrl);
             $('#jenkinsBuildFrame').append(jenkinsIframe);
 
-            getStockData();
+            getHPEStockData();
+			getMicroFocusStockData();
             loadMessages();
-            showMeir();
-            setInterval(showMeir, 60000 * 3);
+            //showMeir();
+            //setInterval(showMeir, 60000 * 3);
             setInterval(refreshPresentationFrame, 60000 * 3);
+			setInterval(refreshJenkinsFrame, 60000 * 30);
         }
 
         function refreshPresentationFrame() {
             $('#m3presentationFrame').find('iframe').attr('src', presentationUrl);
+        }
+		
+		function refreshJenkinsFrame() {
+            $('#jenkinsBuildFrame').find('iframe').attr('src', jenkinsStatusUrl);
         }
 
         function showMeir() {
@@ -41,7 +47,6 @@
         }
 
         function loadMessages() {
-
             $.get('/api/messages').then(function(data){
                 if(data) {
                     var me = data.split(',');
@@ -52,14 +57,45 @@
             });
         }
 
-        function getStockData() {
+        function getHPEStockData() {
             $.ajax({
                 url: "http://dev.markitondemand.com/MODApis/Api/v2/Quote/jsonp?symbol=HPE",
                 dataType: "jsonp",
-                jsonpCallback: "updateStockData"
+                jsonpCallback: "updateHPEStockData"
             });
-            setTimeout(getStockData, 3 * 1000);
+            setTimeout(getHPEStockData, 60 * 1000);
         }
+		
+		function getMicroFocusStockData() {
+
+			$.ajax({
+				url: "https://www.quandl.com/api/v3/datasets/LSE/MCRO.json?api_key=Eh6WTfxDUf7vAQzdS8Q_",
+				dataType: "json"
+			}).then(function(response){
+				var data = response.dataset.data[0];
+				var price = data[5] / 100
+				var change = Math.round(data[7] * 100) / 100;
+				var status;
+				if(change < 0) {
+					status = 'red';
+				} else {
+					status = 'green';
+				}
+
+				if(change > 0) {
+					change = '+' + change;
+				}
+
+				var stockHTML = '<span class="name">MICRO FOCUS (' + response.dataset.dataset_code + ')</span>';
+				stockHTML += '<span class="value ' + status + '">&pound;' + price + '</span>';
+				stockHTML += '<span class="' + status + '"> (' + change + '%)</span>';
+				if(messages.stockMF) {
+					delete messages.stockMF;
+				}
+				addMessage(stockHTML, 'stockMF');
+			});
+            setTimeout(getMicroFocusStockData, 60 * 1000);
+		}
 
         var messages = {};
         function renderMessages(){
@@ -82,7 +118,7 @@
             renderMessages();
         }
 
-        function updateStockData(data) {
+        function updateHPEStockData(data) {
             var change = Math.round(data.Change * 100) / 100;
             var status;
             if(change < 0) {
