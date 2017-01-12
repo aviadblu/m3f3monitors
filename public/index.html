@@ -35,6 +35,7 @@
 		
 		function usageMetrics(){
 			var metricsURLs = [ 
+			/*
 			'https://dwhastrep001p.saas.hpe.com/views/Firas/DashboardRegions?:embed=y&:showShareOptions=true&:display_count=no&:showVizHome=no',
 			'https://dwhastrep001p.saas.hpe.com/views/Firas/DashboardProtocols?:embed=y&:showShareOptions=true&:display_count=no&:showVizHome=no',
 			'https://dwhastrep001p.saas.hpe.com/views/Firas/DashboardCloudvsOPLG?:embed=y&:showShareOptions=true&:display_count=no&:showVizHome=no',
@@ -44,6 +45,7 @@
 			'https://dwhastrep001p.saas.hpe.com/views/Firas/DashboardIPs?:embed=y&:showShareOptions=true&:display_count=no&:showVizHome=no',
 			'https://dwhastrep001p.saas.hpe.com/views/Firas/DashboardIPs2?:embed=y&:showShareOptions=true&:display_count=no&:showVizHome=no',
 			'https://dwhastrep001p.saas.hpe.com/views/Firas/DashboardAddVusersDuringRun?:embed=y&:showShareOptions=true&:display_count=no&:showVizHome=no',
+			*/
 			'https://docs.google.com/presentation/d/1jEg3kWTC9TVLKzMigSLYsDxe-C9PPUtEN5c1UMfP9nQ/embed?start=true&loop=true&delayms=7000']
 			
 			function loadFrame(url) {
@@ -51,10 +53,10 @@
 			}
 			
 			for(var i=0 ; i < metricsURLs.length ; i++) {		
-				setTimeout(loadFrame, 10000 + i*40*1000, metricsURLs[i]);
+				setTimeout(loadFrame, 10000 + i*30*1000, metricsURLs[i]);
 			}
 			
-			setTimeout(usageMetrics, 10000 + i*40*1000);
+			setTimeout(usageMetrics, 10000 + i*30*1000);
 		
 		}
 
