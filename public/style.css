@@ -1,0 +1,107 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+div {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+iframe {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    overflow: hidden;
+    /*-webkit-box-shadow: 3px 3px 3px 1px #D9D9D9;*/
+    /*box-shadow: 3px 3px 3px 1px #D9D9D9;*/
+}
+
+.frameWrapper {
+    padding: 5px;
+}
+
+#m3presentationFrame {
+    width: 75%;
+    height: calc(100% - 160px);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+#m3FirasFrame {
+    width: 75%;
+    height: 170px;
+    position: absolute;
+    bottom: 40px;
+    left: 0px;
+}
+
+#m3FirasFrame iframe {
+    /*border: 1px solid #000;*/
+}
+
+#jenkinsBuildFrame {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 25%;
+    height: calc(100% - 20px);
+}
+
+#bottomFrame {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    z-index: 10;
+    background-color: #fff;
+    font-family: Arial;
+    font-size: 20px;
+
+}
+
+#bottomFrame span {
+    margin-right: 10px;
+}
+
+#messages {
+    display: block;
+    padding: 3px 10px;
+    height: 40px;
+    line-height: 38px;
+    box-sizing: border-box;
+}
+
+.value {
+    font-weight: bold;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
+#meir {
+    -webkit-transition: all 7s ease;
+    transition: all 7s ease;
+    position: absolute;
+    z-index: 10;
+    bottom: 34px;
+    right: -300px;
+    height: 150px;
+}
+
+#meir.in {
+    right: 2000px;
+}
