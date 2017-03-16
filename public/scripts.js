@@ -2,7 +2,7 @@ $(document).ready(init);
 var presentationUrl = "https://docs.google.com/presentation/d/1jEg3kWTC9TVLKzMigSLYsDxe-C9PPUtEN5c1UMfP9nQ/embed?start=true&loop=true&delayms=7000";
 
 var jenkinsFrameIndex = 0;
-var jenkinsStatusUrls = ["http://mydtbld0079.hpeswlab.net:8080/view/SRL%20Build%20Status%20Monitor/",
+var jenkinsStatusUrls = ["http://mydtbld0079.hpeswlab.net:8080/view/SRL%20Code%20Status%20Monitor/",
     "http://mydtbld0079.hpeswlab.net:8080/view/Agent%20Monitor%20Tool/"];
 
 
